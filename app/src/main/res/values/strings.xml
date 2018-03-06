@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">IsenEnSlip</string>
+    <string name="regle">Règles</string>
+    <string name="jouer">Jouer</string>
+    <string name="param">Paramètres</string>
+    <string name="tvNbJoueur">Choisir le nombre de joueur</string>
+    <string name="btnCommencer">Commencer</string>
+    <string name="btnPascompris">J\'ai pas compris</string>
+    <string name="btnCompris">J\'ai compris</string>
+    <string name="ah">AH !!</string>
+    <string name="valide">Valider</string>
+    <string name="choixmusic">Choix de la musique</string>
+    <string name="ajoutCarte">Ajouter une carte</string>
+    <string-array name="nbjoueur">
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+    </string-array>
+</resources>
