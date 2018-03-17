@@ -37,6 +37,8 @@
             android:enabled="true" />
 
         <activity android:name=".Affiche_jeu_test"></activity>
+        <activity android:name=".GameBoardActivity"
+            android:screenOrientation="userLandscape" />
     </application>
 
 </manifest>

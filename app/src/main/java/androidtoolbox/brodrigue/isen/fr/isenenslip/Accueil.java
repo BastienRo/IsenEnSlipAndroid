@@ -63,10 +63,16 @@ public class Accueil extends AppCompatActivity {
     }
 
     public void goToJouer(View v) {
-        Intent jouer = new Intent(this, Jouer.class);
-        startActivity(jouer);
-        final MediaPlayer mp = MediaPlayer.create(this, R.raw.soundbuton);
-        //mp.start();
+
+        mServ.onDestroy();
+        mServ.choix = 1;
+        mServ.length = 0;
+
+        mServ.onCreate();
+
+
+        Intent jeu = new Intent(this, GameBoardActivity.class);
+        startActivity(jeu);
 
     }
 

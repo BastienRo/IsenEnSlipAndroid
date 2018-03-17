@@ -1,7 +1,9 @@
 package androidtoolbox.brodrigue.isen.fr.isenenslip;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -16,6 +18,7 @@ public class Affiche_jeu_test extends AppCompatActivity {
     Context context;
     public Personne users;
     public Action action;
+    ProgressDialog progressDialog;
 
 
 
@@ -27,6 +30,20 @@ public class Affiche_jeu_test extends AppCompatActivity {
         tvPersonne = (TextView) findViewById(R.id.tvPersonne);
         tvAction = (TextView) findViewById(R.id.tvAction);
 
+        progressDialog = new ProgressDialog(Affiche_jeu_test.this);
+        progressDialog.setMessage("Récupération des datas");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        Handler updateHandler = new Handler();
+
+        updateHandler.postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                progressDialog.cancel();
+            }
+        }, 5000);
 
 
         new WebServiceTaskAction(new CallBackInterface() {

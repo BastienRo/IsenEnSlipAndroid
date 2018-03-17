@@ -159,7 +159,8 @@ public class Parametre extends AppCompatActivity {
 
                 //the selected audio.
                 Uri uri = data.getData();
-                mServ.background = 0;
+                mServ.choix = 2;
+                mServ.musicChangee = true;
                 mServ.personelMusique = uri;
                 mServ.length = 0;
                 mServ.onCreate();
