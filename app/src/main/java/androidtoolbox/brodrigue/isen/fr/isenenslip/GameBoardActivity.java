@@ -2,13 +2,18 @@ package androidtoolbox.brodrigue.isen.fr.isenenslip;
 
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.media.MediaPlayer;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.os.Vibrator;
+import android.provider.Settings;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -33,7 +38,11 @@ public class GameBoardActivity extends AppCompatActivity {
     TextView tvName;
     TextView tvActivite;
     Intent music;
+    Parametre parametre;
     private CountDownTimer timer;
+    ConnectivityManager connectivityManager;
+    NetworkInfo networkInfo;
+    boolean isMobile;
 
     private ServiceConnection Scon = new ServiceConnection() {
 
@@ -60,6 +69,22 @@ public class GameBoardActivity extends AppCompatActivity {
         }
     }
 
+    public boolean isConnected(){
+
+        connectivityManager = (ConnectivityManager)
+                getSystemService(Context.CONNECTIVITY_SERVICE);
+        if(connectivityManager != null) {
+
+            networkInfo = connectivityManager.getActiveNetworkInfo();
+            if(networkInfo != null) {
+                if (networkInfo.getState() == NetworkInfo.State.CONNECTED) {
+                    return true;
+                }
+            }
+        }
+        return isMobile;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
@@ -77,6 +102,8 @@ public class GameBoardActivity extends AppCompatActivity {
         tvActivite = (TextView) findViewById(R.id.tvActivite);
 
         text1=(TextView)findViewById(R.id.textView1);
+
+
 
         new WebServiceTaskAction(new CallBackInterface() {
             @Override
@@ -159,21 +186,49 @@ public class GameBoardActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         mServ.onDestroy();
-       mServ.choix = 0;
-        mServ.onCreate();
+        if (mServ.isMusicchangee(mServ.personelMusique) == false) {
+            mServ.choix = 0;
+            mServ.onCreate();
+            Toast.makeText(this,"Tu est dans le chpix 0",Toast.LENGTH_SHORT).show();
+        } else {
+            //parametre.onChoixMusic();
+            Toast.makeText(this,"tu es dans le choix 2",Toast.LENGTH_SHORT).show();
+            mServ.onCreate();
+        }
+
         timer.cancel();
-        Toast.makeText(this,"lol",Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this,"lol",Toast.LENGTH_SHORT).show();
         finish();
     }
 
     public void reload(View view) {
-        mServ.length = 0;
-        finish();
-        Intent jeu = new Intent(this, GameBoardActivity.class);
-        startActivity(jeu);
+        if (!isConnected()) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Attention les Données mobile ou la WiFi ont été désactivé veuillez réactiver l'accés à internet.")
+                    .setTitle("Impossible de se connecter")
+                    .setCancelable(false)
+                    .setPositiveButton("Activer",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    Intent i = new Intent(Settings.ACTION_WIRELESS_SETTINGS);
+                                    startActivity(i);
+                                }
+                            }
+                    )
+                    .setNegativeButton("Retour",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.dismiss();
+                                }
+                            }
+                    );
+            AlertDialog alert = builder.create();
+            alert.show();
+        } else {
+            mServ.length = 0;
+            finish();
+            Intent jeu = new Intent(this, GameBoardActivity.class);
+            startActivity(jeu);
+        }
     }
-
-
-
-
 }

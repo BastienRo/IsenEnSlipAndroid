@@ -6,8 +6,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.media.MediaPlayer;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -22,6 +25,9 @@ public class Accueil extends AppCompatActivity {
     MediaPlayer Soundbutton;
     Button jouer;
     Intent music;
+    ConnectivityManager connectivityManager;
+    NetworkInfo networkInfo;
+    boolean isMobile;
 
     private ServiceConnection Scon = new ServiceConnection() {
 
@@ -48,6 +54,22 @@ public class Accueil extends AppCompatActivity {
         }
     }
 
+    public boolean isConnected(){
+
+        connectivityManager = (ConnectivityManager)
+                getSystemService(Context.CONNECTIVITY_SERVICE);
+        if(connectivityManager != null) {
+
+            networkInfo = connectivityManager.getActiveNetworkInfo();
+            if(networkInfo != null) {
+                if (networkInfo.getState() == NetworkInfo.State.CONNECTED) {
+                    return true;
+                }
+            }
+        }
+        return isMobile;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,19 +82,66 @@ public class Accueil extends AppCompatActivity {
         music.setClass(this, MyService.class);
         doBindService();
         startService(music);
+
+        if (!isConnected()) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Vous avez besoin d'une connexion internet pour cette application. S'il vous plait activer la WiFi ou les données mobiles dans les Options.")
+                    .setTitle("Impossible de se connecter")
+                    .setCancelable(false)
+                    .setPositiveButton("Settings",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    Intent i = new Intent(Settings.ACTION_WIRELESS_SETTINGS);
+                                    startActivity(i);
+                                }
+                            }
+                    )
+                    .setNegativeButton("Retour",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.dismiss();
+                                }
+                            }
+                    );
+            AlertDialog alert = builder.create();
+            alert.show();
+        } else {
+
+        }
     }
 
     public void goToJouer(View v) {
 
-        mServ.onDestroy();
-        mServ.choix = 1;
-        mServ.length = 0;
-
-        mServ.onCreate();
-
-
-        Intent jeu = new Intent(this, GameBoardActivity.class);
-        startActivity(jeu);
+        if (!isConnected()) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Vous avez besoin d'une connexion internet pour cette application. S'il vous plait activer la WiFi ou les données mobiles dans les Options.")
+                    .setTitle("Impossible de se connecter")
+                    .setCancelable(false)
+                    .setPositiveButton("Options",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    Intent i = new Intent(Settings.ACTION_WIRELESS_SETTINGS);
+                                    startActivity(i);
+                                }
+                            }
+                    )
+                    .setNegativeButton("Retout",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.dismiss();
+                                }
+                            }
+                    );
+            AlertDialog alert = builder.create();
+            alert.show();
+        } else {
+            mServ.onDestroy();
+            mServ.choix = 1;
+            mServ.length = 0;
+            mServ.onCreate();
+            Intent jeu = new Intent(this, GameBoardActivity.class);
+            startActivity(jeu);
+        }
 
     }
 
@@ -103,7 +172,6 @@ public class Accueil extends AppCompatActivity {
     }
 
 
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -116,8 +184,8 @@ public class Accueil extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         new AlertDialog.Builder(this)
-                .setTitle("Really Exit?")
-                .setMessage("Are you sure you want to exit?")
+                .setTitle("Quitter Vraiment?")
+                .setMessage("Allez on s'amuse bien, non?")
                 .setNegativeButton(android.R.string.no, null)
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 

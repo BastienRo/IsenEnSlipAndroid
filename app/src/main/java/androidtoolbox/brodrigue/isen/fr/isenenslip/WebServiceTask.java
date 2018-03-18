@@ -19,7 +19,7 @@ public class WebServiceTask extends AsyncTask<String, String , String> {
 
 
         Random rand = new Random();
-        int n = rand.nextInt(4);
+        int n = rand.nextInt(48);
         private CallBackInterface callBackInterface;
 
         public WebServiceTask(CallBackInterface callBackInterfaceImplementation) {

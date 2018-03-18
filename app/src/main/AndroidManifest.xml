@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -23,9 +24,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Jouer"
-            android:screenOrientation="userLandscape" />
-        <activity
             android:name=".Regle"
             android:screenOrientation="userLandscape" />
         <activity
@@ -36,9 +34,12 @@
             android:name=".MyService"
             android:enabled="true" />
 
-        <activity android:name=".Affiche_jeu_test"></activity>
         <activity android:name=".GameBoardActivity"
             android:screenOrientation="userLandscape" />
+
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
     </application>
 
 </manifest>

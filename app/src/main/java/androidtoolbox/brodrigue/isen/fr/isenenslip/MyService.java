@@ -15,11 +15,12 @@ import android.widget.Toast;
 public class MyService extends Service implements MediaPlayer.OnErrorListener {
     private final IBinder mBinder = new ServiceBinder();
     MediaPlayer mPlayer;
-    public boolean musicChangee;
+
     public int background = R.raw.backgroundmusic;
     public int choix;
     public int gameTimer = R.raw.mansnothot;
     public Uri personelMusique;
+    public boolean musicchangee;
     public int length = 0;
 
     public MyService() {
@@ -81,6 +82,21 @@ public class MyService extends Service implements MediaPlayer.OnErrorListener {
             length = mPlayer.getCurrentPosition();
 
         }
+    }
+
+    public boolean isMusicchangee(Uri personelMusique){
+        if(personelMusique == null){
+            musicchangee = false;
+        } else {
+            musicchangee = true;
+        }
+        return  musicchangee;
+    }
+
+    public Uri setMusicchangee(Uri truc)
+    {
+        personelMusique = truc;
+        return personelMusique;
     }
 
     public void resumeMusic() {

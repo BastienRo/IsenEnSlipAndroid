@@ -25,10 +25,12 @@ public class Parametre extends AppCompatActivity {
     private static final int MY_PERMISSION_REQUEST = 1;
 
     private MyService mServ;
-    Accueil monservice;
     Button choixMusique;
 
-    MyServiceGame myServiceGame;
+
+    public Uri saveUri;
+
+
 
     MediaPlayer Soundbutton;
     Intent music;
@@ -119,6 +121,7 @@ public class Parametre extends AppCompatActivity {
         if (requestCode == MY_PERMISSION_REQUEST)  {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(this, "Permission GRANTED", Toast.LENGTH_SHORT).show();
+                onChoixMusic();
             } else {
                 Toast.makeText(this, "Permission DENIED", Toast.LENGTH_SHORT).show();
             }
@@ -156,25 +159,17 @@ public class Parametre extends AppCompatActivity {
         if(requestCode == 1){
 
             if(resultCode == RESULT_OK){
-
                 //the selected audio.
                 Uri uri = data.getData();
                 mServ.choix = 2;
-                mServ.musicChangee = true;
-                mServ.personelMusique = uri;
+                mServ.setMusicchangee(uri);
                 mServ.length = 0;
                 mServ.onCreate();
-                Toast.makeText(this,mServ.personelMusique.toString(),Toast.LENGTH_SHORT).show();
-
-
+                //Toast.makeText(this,mServ.personelMusique.toString(),Toast.LENGTH_SHORT).show();
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
-
-
-
-
 
     public void onChoixMusic(){
 
